@@ -82,5 +82,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           cd dist
-          gh release create ${{ github.ref_name }} * --title "Release v1.0.0" --notes "Tool to print 'Hello, world!'"
+          gh release create ${{ github.ref_name }} ${{ env.ARCHIVE }} checksum.txt \
+          --title "Release v1.0.0" \
+          --notes "Tool to print 'Hello, world!'"
 
