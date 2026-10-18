@@ -55,13 +55,15 @@ jobs:
       - name: Create archive
         run: |
           tar -czvf ${{ env.ARCHIVE }} hello README.md
-          sha256sum ${{ env.ARCHIVE }} > checksum.txt
+          sha256sum ${{ env.ARCHIVE }} > checksum-${{ env.ARCHIVE }}.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
           name: ${{ env.ARCHIVE }}
-          path: ./*
+          path: |
+            ${{ env.ARCHIVE }}
+            checksum-${{ env.ARCHIVE }}.txt
 
 
   create-release:
@@ -82,6 +84,12 @@ jobs:
         with:
           path: dist
           merge-multiple: true
+      
+      - name: Generate sha256sums.txt
+        run: |
+          cd dist
+          cat checksum-* > sha256sums.txt
+          rm checksum-*
 
       - name: Create release
         env:
